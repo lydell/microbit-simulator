@@ -15,22 +15,22 @@ with a web browser.
 
 ### Backend
 
-- `microbit.panic` – No
-- `microbit.reset` – Yes
-- `microbit.sleep` – Yes
-- `microbit.running_time` – Yes
-- `microbit.temperature` – No
-- `microbit.accelerometer` – No
-- `microbit.button_a` – Yes
-- `microbit.button_b` – Yes
-- `microbit.compass` – No
-- `microbit.display` – Partly (\*)
-- `microbit.i2c` – No
-- `microbit.Image` – No
-- `microbit.pin0`—`microbit.pin20` – No
-- `microbit.spi` – No
-- `microbit.uart` – No
-- Other modules than `microbit` – No
+- [ ] `microbit.panic`
+- [x] **`microbit.reset`**
+- [x] **`microbit.sleep`**
+- [x] **`microbit.running_time`**
+- [ ] `microbit.temperature`
+- [ ] `microbit.accelerometer`
+- [x] **`microbit.button_a`**
+- [x] **`microbit.button_b`**
+- [ ] `microbit.compass`
+- [x] **`microbit.display`** – Partly (\*)
+- [ ] `microbit.i2c`
+- [ ] `microbit.Image`
+- [ ] `microbit.pin0`–`microbit.pin20`
+- [ ] `microbit.spi`
+- [ ] `microbit.uart`
+- [ ] Other modules than `microbit`
 
 (\*) Regarding `microbit.display`:
 
