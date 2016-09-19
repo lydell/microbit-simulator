@@ -74,6 +74,7 @@ with a web browser.
 ```
 $ git clone https://github.com/lydell/microbit-simulator.git
 $ git clone https://github.com/lydell/microbit-snake.git
+$ cd microbit-snake
 $ ln -s ../microbit-simulator/microbit microbit
 $ cd ../microbit-simulator
 $ python ../microbit-snake/snake.py
