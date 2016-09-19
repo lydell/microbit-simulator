@@ -48,8 +48,8 @@ with a web browser.
 
 ## Requirements
 
-- `elm`
-- `python3`
+- Elm 0.17.1
+- Python 3.4
 
 
 ## Installation
