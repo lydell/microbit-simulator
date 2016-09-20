@@ -333,7 +333,10 @@ view model =
             ]
 
         innerStyles =
-            if model.display.isOn then [] else [("opacity", "0")]
+            if model.display.isOn then
+                []
+            else
+                [ ( "opacity", "0" ) ]
     in
         div [ style styles ]
             [ div [ style innerStyles]
