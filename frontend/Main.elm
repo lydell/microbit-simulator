@@ -193,10 +193,9 @@ encodeButton : Button -> String
 encodeButton button =
     let
         data =
-            Json.Encode.object
-                [ ( "id", Json.Encode.string (toString button.id) )
-                , ( "is_pressed", Json.Encode.bool button.isPressed )
-                ]
+            [ ( "id", Json.Encode.string (toString button.id) )
+            , ( "is_pressed", Json.Encode.bool button.isPressed )
+            ]
 
         payload =
             webSocketPayload BUTTON_CHANGE data
@@ -204,12 +203,16 @@ encodeButton button =
         Json.Encode.encode 0 payload
 
 
-webSocketPayload : WebSocketMessageName -> Json.Encode.Value -> Json.Encode.Value
+webSocketPayload :
+    WebSocketMessageName
+    -> List ( String, Json.Encode.Value )
+    -> Json.Encode.Value
 webSocketPayload webSocketMessageName data =
-    Json.Encode.object
-        [ ( "message_name", Json.Encode.string (toString webSocketMessageName) )
-        , ( "data", data )
-        ]
+    let
+        messageName =
+            Json.Encode.string (toString webSocketMessageName)
+    in
+        Json.Encode.object <| ( "message_name", messageName ) :: data
 
 
 updateModelWithWebSocketString : String -> Model -> Model

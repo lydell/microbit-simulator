@@ -105,7 +105,7 @@ def _setupWebsockets(loop):
             message_name = payload.get('message_name')
 
             if message_name == 'BUTTON_CHANGE':
-                _on_button_change(payload.get('data', {}))
+                _on_button_change(payload)
             else:
                 print('  Unrecognized message_name: {}'.format(message_name))
 
