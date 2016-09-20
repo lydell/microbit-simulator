@@ -130,8 +130,11 @@ initialPixels =
         coordinates =
             List.concatMap (\x -> List.map ((,) x) [0..maxY]) [0..maxX]
 
+        brightness =
+            0
+
         pixels =
-            List.map (\coordinate -> ( coordinate, 0 )) coordinates
+            List.map (\coordinate -> ( coordinate, brightness )) coordinates
     in
         Dict.fromList pixels
 
