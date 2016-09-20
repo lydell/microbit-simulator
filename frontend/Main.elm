@@ -361,7 +361,7 @@ viewPixel pixel =
             (100 / (toFloat maxX)) * ((toFloat x) + 0.5)
 
         alpha =
-            (toFloat brightness) / (toFloat maxBrightness)
+            toFloat brightness / toFloat maxBrightness
 
         styles =
             [ ( "position", "absolute" )
