@@ -4,6 +4,7 @@ import Dict exposing (Dict)
 import Html exposing (Html, div)
 import Html.Attributes exposing (style)
 import Html.App
+import Html.Lazy
 import Json.Decode exposing ((:=))
 import Json.Encode
 import Keyboard exposing (KeyCode)
@@ -339,8 +340,11 @@ view model =
                 [ ( "opacity", "0" ) ]
     in
         div [ style styles ]
-            [ div [ style innerStyles]
-                (List.map viewPixel (Dict.toList model.display.pixels))
+            [ div [ style innerStyles ]
+                (List.map
+                    (Html.Lazy.lazy viewPixel)
+                    (Dict.toList model.display.pixels)
+                )
             ]
 
 
