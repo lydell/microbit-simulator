@@ -128,7 +128,7 @@ initialPixels : Dict PixelCoordinate PixelBrightness
 initialPixels =
     let
         coordinates =
-            List.concatMap (\x -> List.map ((,) x) [0..maxY]) [0..maxX]
+            List.concatMap (\x -> List.map ((,) x) [0..maxY - 1]) [0..maxX - 1]
 
         brightness =
             0
