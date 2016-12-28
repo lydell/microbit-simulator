@@ -3,9 +3,8 @@ module Main exposing (..)
 import Dict exposing (Dict)
 import Html exposing (Html, div)
 import Html.Attributes exposing (style)
-import Html.App
 import Html.Lazy
-import Json.Decode exposing ((:=))
+import Json.Decode
 import Json.Encode
 import Keyboard exposing (KeyCode)
 import WebSocket
@@ -41,9 +40,9 @@ buttonBKeys =
     [ 39, 66 ]
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
-    Html.App.program
+    Html.program
         { init = init
         , update = update
         , subscriptions = subscriptions
@@ -127,8 +126,14 @@ initialModel =
 initialPixels : Dict PixelCoordinate PixelBrightness
 initialPixels =
     let
+        xs =
+            (List.range 0 (maxX - 1))
+
+        ys =
+            (List.range 0 (maxY - 1))
+
         coordinates =
-            List.concatMap (\x -> List.map ((,) x) [0..maxY - 1]) [0..maxX - 1]
+            List.concatMap (\x -> List.map ((,) x) ys) xs
 
         brightness =
             0
@@ -247,8 +252,8 @@ updateModelWithWebSocketData webSocketData model =
                     model.display
                         |> updateDisplayPixels data.display.pixels
                         |> updateDisplayOnOff data.display.isOn
-                , buttonA = fst (updateButton data.buttonA model.buttonA)
-                , buttonB = fst (updateButton data.buttonB model.buttonB)
+                , buttonA = Tuple.first (updateButton data.buttonA model.buttonA)
+                , buttonB = Tuple.first (updateButton data.buttonB model.buttonB)
             }
 
 
@@ -268,25 +273,25 @@ updateDisplayOnOff isOn display =
 
 webSocketMsgDecoder : Json.Decode.Decoder WebSocketData
 webSocketMsgDecoder =
-    ("message_name" := Json.Decode.string)
-        `Json.Decode.andThen` webSocketMsgDataDecoder
+    (Json.Decode.field "message_name" Json.Decode.string)
+        |> Json.Decode.andThen webSocketMsgDataDecoder
 
 
 webSocketMsgDataDecoder : String -> Json.Decode.Decoder WebSocketData
 webSocketMsgDataDecoder messageName =
     case messageName of
         "DISPLAY_PIXELS" ->
-            Json.Decode.object1 DisplayPixels ("pixels" := pixelsDecoder)
+            Json.Decode.map DisplayPixels (Json.Decode.field "pixels" pixelsDecoder)
 
         "DISPLAY_ON_OFF" ->
-            Json.Decode.object1 DisplayOnOff ("is_on" := Json.Decode.bool)
+            Json.Decode.map DisplayOnOff (Json.Decode.field "is_on" Json.Decode.bool)
 
         "INITIAL_DATA" ->
             Json.Decode.map InitialData <|
-                Json.Decode.object3 WebSocketInitialData
-                    ("display" := displayDecoder)
-                    ("button_a" := Json.Decode.bool)
-                    ("button_b" := Json.Decode.bool)
+                Json.Decode.map3 WebSocketInitialData
+                    (Json.Decode.field "display" displayDecoder)
+                    (Json.Decode.field "button_a" Json.Decode.bool)
+                    (Json.Decode.field "button_b" Json.Decode.bool)
 
         _ ->
             Json.Decode.fail ("Unrecognized message_name: " ++ messageName)
@@ -295,16 +300,22 @@ webSocketMsgDataDecoder messageName =
 pixelsDecoder : Json.Decode.Decoder (List Pixel)
 pixelsDecoder =
     Json.Decode.list <|
-        Json.Decode.tuple2 (,)
-            (Json.Decode.tuple2 (,) Json.Decode.int Json.Decode.int)
-            Json.Decode.int
+        Json.Decode.map2 (,)
+            (Json.Decode.index 0
+                (Json.Decode.map2
+                    (,)
+                    (Json.Decode.index 0 Json.Decode.int)
+                    (Json.Decode.index 1 Json.Decode.int)
+                )
+            )
+            (Json.Decode.index 1 Json.Decode.int)
 
 
 displayDecoder : Json.Decode.Decoder WebSocketInitialDisplayData
 displayDecoder =
-    Json.Decode.object2 WebSocketInitialDisplayData
-        ("pixels" := pixelsDecoder)
-        ("is_on" := Json.Decode.bool)
+    Json.Decode.map2 WebSocketInitialDisplayData
+        (Json.Decode.field "pixels" pixelsDecoder)
+        (Json.Decode.field "is_on" Json.Decode.bool)
 
 
 subscriptions : Model -> Sub Msg

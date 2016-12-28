@@ -48,7 +48,7 @@ with a web browser.
 
 ## Requirements
 
-- Elm 0.17.1
+- Elm 0.18.0
 - Python 3.4
 
 
